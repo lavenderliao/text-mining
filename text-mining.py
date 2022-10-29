@@ -17,8 +17,47 @@ first_comment = movie_reviews['data']['reviews'][0]['content']
 
 # word frequencies
 
-def process_file(filename):
+def process_file(filename, skip_header):
     """Makes a histogram that contains the words from a file.
+    filename: string
+    skip_header: boolean, whether to skip the Gutenberg header
+    returns: map from each word to the number of times it appears.
+    """
+    hist = {}
+    fp = open(filename, encoding='utf8')
+
+    if skip_header:
+        skip_gutenberg_header(fp)
+
+    # strippables = string.punctuation + string.whitespace
+    # via: https://stackoverflow.com/questions/60983836/complete-set-of-punctuation-marks-for-python-not-just-ascii
+
+    strippables = ''.join(
+        [chr(i) for i in range(sys.maxunicode) if category(chr(i)).startswith("P")]
+    )
+
+    for line in fp:
+        if line.startswith('*** END OF THIS PROJECT'):
+            break
+
+        line = line.replace('-', ' ')
+        line = line.replace(
+            chr(8212), ' '
+        )  # Unicode 8212 is the HTML decimal entity for em dash
+
+        for word in line.split():
+            # remove punctuation and convert to lowercase
+            word = word.strip(strippables)
+            word = word.lower()
+
+            # update the histogram
+            hist[word] = hist.get(word, 0) + 1
+
+    return hist
+
+
+def process_text(text):
+    """Makes a histogram that contains the words from a text.
     filename: string
     skip_header: boolean, whether to skip the Gutenberg header
     returns: map from each word to the number of times it appears.
@@ -32,7 +71,7 @@ def process_file(filename):
         [chr(i) for i in range(sys.maxunicode) if category(chr(i)).startswith("P")]
     )
 
-    for word in filename.split():
+    for word in text.split():
         # remove punctuation and convert to lowercase
         word = word.strip(strippables)
         word = word.lower()
@@ -40,6 +79,7 @@ def process_file(filename):
         # update the histogram
         hist[word] = hist.get(word, 0) + 1
 
+    # print(hist)
     return hist
 
 def most_common(hist, excluding_stopwords=True):
@@ -77,7 +117,7 @@ def print_most_common(hist, num=10):
         print(word, '\t', freq)
 
 def main():
-    hist = process_file(first_comment)
+    hist = process_text(first_comment)
     t = most_common(hist, False)
 
     print('The most common words are:')
@@ -96,6 +136,8 @@ score = SentimentIntensityAnalyzer().polarity_scores(sentence)
 print(score)
 
 # similarity of two comments
+
+
 
 # if __name__ == "__main__":
 #     main()
