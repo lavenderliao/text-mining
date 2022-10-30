@@ -1,6 +1,4 @@
 from imdb import Cinemagoer
-import random
-import string
 import sys
 from unicodedata import category
 
@@ -9,15 +7,19 @@ ia = Cinemagoer()
 
 # search movie
 movie = ia.search_movie("Ticket to Paradise")[0]
-print(movie.movieID)
+# print(movie.movieID)
 # '14109724'
 
 movie_reviews = ia.get_movie_reviews('14109724')
-first_comment = movie_reviews['data']['reviews'][0]['content']
+comments = []
+for i in range(0,10):
+    x = movie_reviews['data']['reviews'][i]['content']
+    comments.append(x)
+comment_text = ''.join(comments)
 
 # word frequencies
 
-def process_file(filename, skip_header):
+def process_file(filename):
     """Makes a histogram that contains the words from a file.
     filename: string
     skip_header: boolean, whether to skip the Gutenberg header
@@ -25,9 +27,6 @@ def process_file(filename, skip_header):
     """
     hist = {}
     fp = open(filename, encoding='utf8')
-
-    if skip_header:
-        skip_gutenberg_header(fp)
 
     # strippables = string.punctuation + string.whitespace
     # via: https://stackoverflow.com/questions/60983836/complete-set-of-punctuation-marks-for-python-not-just-ascii
@@ -72,14 +71,13 @@ def process_text(text):
     )
 
     for word in text.split():
-        # remove punctuation and convert to lowercase
+            # remove punctuation and convert to lowercase
         word = word.strip(strippables)
         word = word.lower()
 
-        # update the histogram
+            # update the histogram
         hist[word] = hist.get(word, 0) + 1
 
-    # print(hist)
     return hist
 
 def most_common(hist, excluding_stopwords=True):
@@ -90,7 +88,7 @@ def most_common(hist, excluding_stopwords=True):
     """
     t = []
 
-    stopwords = process_file('data/stopwords.txt',False)
+    stopwords = process_file('data/stopwords.txt')
 
     stopwords = list(stopwords.keys())
     # print(stopwords)
@@ -117,7 +115,7 @@ def print_most_common(hist, num=10):
         print(word, '\t', freq)
 
 def main():
-    hist = process_text(first_comment)
+    hist = process_text(comment_text)
     t = most_common(hist, False)
 
     print('The most common words are:')
@@ -131,13 +129,16 @@ if __name__ == "__main__":
 # sentiment analysis
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-sentence = first_comment
+sentence = comment_text
 score = SentimentIntensityAnalyzer().polarity_scores(sentence)
+print('The sentiment analysis result is')
 print(score)
 
 # similarity of two comments
-
-
-
-# if __name__ == "__main__":
-#     main()
+from thefuzz import fuzz
+import random
+first_comment = random.choice(comments)
+second_comment = random.choice(comments)
+result1 = fuzz.token_set_ratio(first_comment,second_comment)
+print('The similarity between first and second comment is:')
+print(result1)
