@@ -139,6 +139,6 @@ from thefuzz import fuzz
 import random
 first_comment = random.choice(comments)
 second_comment = random.choice(comments)
-result1 = fuzz.token_set_ratio(first_comment,second_comment)
+result = fuzz.token_set_ratio(first_comment,second_comment)
 print('The similarity between first and second comment is:')
-print(result1)
+print(result)
