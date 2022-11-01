@@ -18,7 +18,7 @@ I use IMDB as my data source. I hope to learn about the reviews on a movie that 
 
 1. I find in the most common words list, romantic and comedy are mentioned, meaning this is going to be a romantic comedy movie. Julia Roberts and George Clooney are mentioned, meaning they are the main characters and the actors probably matter a lot in the success of this movie. Good, like, better, great are in the list, meaning people generally have positive reviews on the movie.
 
-'''
+
 The most common words are:
 movie    21
 roberts          10
@@ -31,7 +31,7 @@ better   7
 great    6
 george   6
 comedy   6
-'''
+
 
 2. I also find in the sentiment analysis result, there are more positive words than negative words, and the compound score is very high (> 0.05), which means in general, the audience has a postive opinion towards the movie.
 
