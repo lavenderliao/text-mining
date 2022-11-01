@@ -35,14 +35,13 @@ comedy   6
 
 2. I also find in the sentiment analysis result, there are more positive words than negative words, and the compound score is very high (> 0.05), which means in general, the audience has a postive opinion towards the movie.
 
-'''{'neg': 0.072, 'neu': 0.65, 'pos': 0.278, 'compound': 0.9999}'''
+{'neg': 0.072, 'neu': 0.65, 'pos': 0.278, 'compound': 0.9999}
 
 3. Lastly, I find that the similarities between first and second reviews, as well as between third and fourth reviews are not high. This indicates that people are talking about different things about this movie.
 
-'''
 The similarity between first and second comment is:
 54
-'''
+
 
 ## Reflection:
 
